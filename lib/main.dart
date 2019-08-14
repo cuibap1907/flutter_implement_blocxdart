@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
+import 'package:flutter_implement_blocanddartx/bloc/counter_bloc.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -30,35 +31,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counternum = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counternum++;
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      _counternum--;
-    });
-  }
+  CounterBloc _counterBloc = new CounterBloc(initialCount: 0);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
               "You have already touched time: ",
               style: TextStyle(color: Colors.blue, fontSize: 16),
             ),
-            Text(
-              "$_counternum",
-              style: TextStyle(fontSize: 18, color: Colors.red),
+            StreamBuilder<int>(
+              stream: _counterBloc.observableCounter,
+              builder: (context, snapshot) {
+                return Text(
+                  "${snapshot.data}",
+                  style: TextStyle(fontSize: 18, color: Colors.red),
+                );
+              }
             )
           ],
         ),
@@ -70,13 +64,13 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: EdgeInsets.only(bottom: 10),
             child: 
             FloatingActionButton(
-              onPressed: _incrementCounter,
+              onPressed: _counterBloc.incrementCounter,
               child: Icon(Icons.add),
               tooltip: "increment counter",
             ),
           ),
           FloatingActionButton(
-            onPressed: _decrementCounter,
+            onPressed: _counterBloc.decrementCounter,
             child: Icon(Icons.remove),
             tooltip: "decrement counter",
           ),
